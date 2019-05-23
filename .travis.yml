@@ -3,7 +3,21 @@ services:
   - docker
 
 before_install:
-  - docker build -t nichu/docker-react -f Dockerfile.dev .
+  - docker build -t miczet/docker-react -f Dockerfile.dev .
 
 script: # -- --coverage added to go out of rnp run test command (by default waits for user input)
-  - docker run nichu/docker-react  npm run test -- --coverage
+  - docker run miczet/docker-react  npm run test -- --coverage
+
+deploy:
+  provider: elasticbeanstalk
+  region: "us-east-1"
+  app: "docker-react"
+  env: "DockerReact-env"
+  bucket_name: "elasticbeanstalk-us-east-1-678496851674"
+  bucket_path: "docker-react"
+  on:
+    branch: master
+  access_key_id: $AWS_ACCESS_KEY
+  secret_access_key: 
+    secure: "$AWS_SECRET_KEY"
+
